@@ -1,0 +1,20 @@
+name: Build
+on:
+  workflow_dispatch:
+
+jobs:
+  run-batch:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Run .bat file
+        run: .\bin\build.bat
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-binaries
+          path: |
+            IDE\dist\**
