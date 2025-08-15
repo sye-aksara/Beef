@@ -8966,6 +8966,20 @@ namespace IDE
 
 			//if (workspaceOptions.mE)
 			macroList.Add("BF_HAS_VDATA_EXTENDER");
+			
+			let projectOptions = GetCurProjectOptions(mWorkspace.mStartupProject);
+			let optimizationLevel =
+                projectOptions.mBeefOptions.mOptimizationLevel ?? workspaceOptions.mBfOptimizationLevel;
+
+            switch (optimizationLevel)
+            {
+                case .O0: macroList.Add("BF_OPTIMIZATION_LEVEL_O0");
+                case .O1: macroList.Add("BF_OPTIMIZATION_LEVEL_O1");
+                case .O2: macroList.Add("BF_OPTIMIZATION_LEVEL_O2");
+                case .O3: macroList.Add("BF_OPTIMIZATION_LEVEL_O3");
+                case .Og: macroList.Add("BF_OPTIMIZATION_LEVEL_OG");
+                case .OgPlus: macroList.Add("BF_OPTIMIZATION_LEVEL_OGPLUS");
+            }
 		}
 
 		public void GetClangResolveArgs(Project project, List<String> outResolveArgs)
