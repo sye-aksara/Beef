@@ -3610,6 +3610,34 @@ void BfIRCodeGen::HandleNextCmd()
 						SetResult(curId, llvm::ConstantExpr::getBitCast(globalVar, charType->getPointerTo()));
 						break;
 					}
+					else
+					{
+						std::vector<llvm::Type*> params;
+						std::vector<llvm::Value*> vals;
+
+						for(auto arg : args )
+						{
+							auto v = TryToVector(arg);
+							if(v == nullptr){
+
+								vals.push_back(arg.mValue);
+								params.push_back(arg.mTypeEx->mLLVMType);
+							}
+							else{
+								vals.push_back(v);
+								params.push_back(llvm::dyn_cast<llvm::VectorType>(v->getType()));
+							}
+						}
+						llvm::ArrayRef<llvm::Type*> argsTypeArray(params.data(), params.size());
+						llvm::ArrayRef<llvm::Value*> ValuesArray(vals.data(), vals.size());
+
+						auto funcType = llvm::FunctionType::get(params[0], argsTypeArray, false);
+						SetActiveFunctionSimdType(BfSIMDSetting_SSE41);
+						auto func =  mLLVMModule->getOrInsertFunction(intrinsicData->mName.c_str(), funcType);
+						SetResult(curId, mIRBuilder->CreateCall(func, ValuesArray));
+						
+						break;
+					}
 
 					FatalError(StrFormat("Unable to find intrinsic '%s'", intrinsicData->mName.c_str()));
 					break;
@@ -3704,6 +3732,9 @@ void BfIRCodeGen::HandleNextCmd()
 								case BfIRIntrinsic_Sub:
 									result = mIRBuilder->CreateFSub(val0, val1);
 									break;
+								case BfIRIntrinsic_Xor: {
+
+								}
 								default:
 									FatalError("Intrinsic argument error");
 								}
