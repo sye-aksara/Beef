@@ -138,5 +138,9 @@ namespace System.Numerics
 		public static extern v128 operator&(v128 lhs, v128 rhs);
 		[Intrinsic("not")]
 		public static extern v128 operator~(v128 lhs);
+		[Intrinsic("or")]
+		public static extern v128 operator|(v128 lhs, v128 rhs);
+		[Intrinsic("xor")]
+		public static extern v128 operator^(v128 lhs, v128 rhs);
 	}
 }

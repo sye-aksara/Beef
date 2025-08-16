@@ -136,6 +136,7 @@ namespace System.Numerics.X86
 		
 		public static extern v128 mul_ss(v128 a, v128 b);
 		
+		[Intrinsic("or")]
 		public static extern v128 or_ps(v128 a, v128 b);
 		
 		public static extern v128 rcp_ps(v128 a);
@@ -194,7 +195,7 @@ namespace System.Numerics.X86
 		
 		public static extern v128 unpacklo_ps(v128 a, v128 b);
 
-		//[Intrinsic("x86:x86_sse_cmp_ss")]
+		[Intrinsic("xor")]
 		public static extern v128 xor_ps(v128 a, v128 b);
 	}
 }
