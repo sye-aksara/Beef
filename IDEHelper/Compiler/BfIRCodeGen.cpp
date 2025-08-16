@@ -3704,6 +3704,17 @@ void BfIRCodeGen::HandleNextCmd()
 								case BfIRIntrinsic_Sub:
 									result = mIRBuilder->CreateFSub(val0, val1);
 									break;
+								case BfIRIntrinsic_Xor:
+									{
+										auto int32Ty = llvm::Type::getInt32Ty(*mLLVMContext);
+										auto elemCount = vecType->getElementCount();
+										auto int32VecTy = llvm::VectorType::get(int32Ty, elemCount);
+										auto valf0 = mIRBuilder->CreateBitCast(val0, int32VecTy);
+										auto valf1 = mIRBuilder->CreateBitCast(val1, int32VecTy);
+										auto xorResult = mIRBuilder->CreateXor(valf0, valf1);
+										result = mIRBuilder->CreateBitCast(xorResult, val0->getType());
+									}
+									break;
 								default:
 									FatalError("Intrinsic argument error");
 								}
