@@ -3650,6 +3650,8 @@ void BfIRCodeGen::HandleNextCmd()
 				case BfIRIntrinsic_GtE:
 				case BfIRIntrinsic_Lt:
 				case BfIRIntrinsic_LtE:
+				case BfIRIntrinsic_Max:
+				case BfIRIntrinsic_Min:
 				case BfIRIntrinsic_Mod:
 				case BfIRIntrinsic_Mul:
 				case BfIRIntrinsic_Neq:
@@ -3719,6 +3721,12 @@ void BfIRCodeGen::HandleNextCmd()
 									break;
 								case BfIRIntrinsic_LtE:
 									result = mIRBuilder->CreateFCmpOLE(val0, val1);
+									break;
+								case BfIRIntrinsic_Max:
+									result = mIRBuilder->CreateMaxNum(val0, val1);
+									break;
+								case BfIRIntrinsic_Min:
+									result = mIRBuilder->CreateMinNum(val0, val1);
 									break;
 								case BfIRIntrinsic_Mod:
 									result = mIRBuilder->CreateFRem(val0, val1);
@@ -3804,6 +3812,10 @@ void BfIRCodeGen::HandleNextCmd()
 								case BfIRIntrinsic_LtE:
 									result = mIRBuilder->CreateICmpSLE(val0, val1);
 									break;
+								case BfIRIntrinsic_Max:
+								case BfIRIntrinsic_Min:
+									Fail("The \"max\" and \"min\" intrinsic functions do not support integer types.");
+									break;
 								case BfIRIntrinsic_Mod:
 									result = mIRBuilder->CreateSRem(val0, val1);
 									break;
@@ -3881,6 +3893,7 @@ void BfIRCodeGen::HandleNextCmd()
 						}
 					}
 					break;
+				/*
 				case BfIRIntrinsic_Min:
 				case BfIRIntrinsic_Max:
 					{
@@ -3966,6 +3979,7 @@ void BfIRCodeGen::HandleNextCmd()
 						SetResult(curId, mIRBuilder->CreateCall(func, args));
 					}
 					break;
+				*/
 				case BfIRIntrinsic_Cpuid:
 					{
 						llvm::Type* elemType = llvm::Type::getInt32Ty(*mLLVMContext);
